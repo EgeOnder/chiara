@@ -1,0 +1,30 @@
+name: Environment setup
+
+on:
+    push:
+        branches: [main]
+    pull_request:
+        branches: ['*']
+
+jobs:
+    setup:
+        runs-on: ubuntu-latest
+
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: Set up Python
+              uses: actions/setup-python@v5
+              with:
+                  python-version: '3.12.x'
+                  cache: 'pip'
+
+            - name: Create virtual environment and install dependencies
+              run: |
+                  chmod +x ./utils/setup.sh
+                  ./utils/setup.sh
+
+            - name: Verify installation
+              run: |
+                  source venv/bin/activate
+                  python -c "import flask; print('Flask version:', flask.__version__)"
